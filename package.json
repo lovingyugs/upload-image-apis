@@ -1,0 +1,20 @@
+{
+  "name": "upload-image-apis",
+  "version": "1.0.0",
+  "description": "Well, this are the REST API's for uploading images.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Yugal Jain",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "formidable": "^1.1.1",
+    "fs-extra": "^4.0.1",
+    "morgan": "^1.8.2",
+    "quickthumb": "0.0.12"
+  }
+}

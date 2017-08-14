@@ -1,0 +1,14 @@
+*~
+*.log
+*.sublime-*
+*.tgz
+.DS_Store
+node_modules
+public/lib
+*.png
+*.PNG
+*.jpg
+*.jpeg
+*.gif
+*.Gif
+npm-debug.log
