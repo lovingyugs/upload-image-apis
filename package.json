@@ -4,7 +4,7 @@
   "description": "Well, this are the REST API's for uploading images.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "",
     "start": "node ./bin/www"
   },
   "author": "Yugal Jain",

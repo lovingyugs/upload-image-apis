@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'development') {
   config = {
     global_user_cnt: '',
     superSecret: 'i-love-secret',
-    hostname: 'https://uploadimage70.herokuapp.com'
+    hostname: 'https://uploadimages70.herokuapp.com'
   };
 } else {
   config = {
