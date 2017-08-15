@@ -20,10 +20,10 @@ app.use(qt.static(__dirname + '/'));
 app.use('/api', routes);
 
 app.get('/', function(req, res) {
-  res.redirect('/');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
-app.listen(3000, function(err){
+app.listen(process.env.PORT || 3000, function(err){
   if(err){
     console.log(err);
   }
