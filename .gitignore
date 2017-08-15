@@ -5,6 +5,8 @@
 .DS_Store
 node_modules
 public/lib
+.editorconfig
+.eslintrc
 *.png
 *.PNG
 *.jpg

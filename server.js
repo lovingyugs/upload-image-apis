@@ -23,4 +23,13 @@ app.get('/', function(req, res) {
   res.redirect('/');
 });
 
+app.listen(3000, function(err){
+  if(err){
+    console.log(err);
+  }
+  else{
+    console.log('running on 3000');
+  }
+});
+
 module.exports = app;
