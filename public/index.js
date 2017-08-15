@@ -1,7 +1,14 @@
-let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE1MDI4MDQzMjAsImV4cCI6MTUwMjg5MDcyMH0.VAaDepNHi6FnIayLp1HwzGLi7roYEyXNmVTbTb5HqQw';
+let token = ''; 
+// 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE1MDI4MDQzMjAsImV4cCI6MTUwMjg5MDcyMH0.VAaDepNHi6FnIayLp1HwzGLi7roYEyXNmVTbTb5HqQw';
 
 $(document).ready(function() {
   console.log('runs');
+
+  $("#api-key").on('change',function(e){
+    console.log($('#api-key').val());
+    token = $('#api-key').val();
+    $(".api-key-text").html(token);
+  });
 
   $("#gen-btn").on('click', function(e) {
     $.ajax({
@@ -9,6 +16,9 @@ $(document).ready(function() {
       url: '/api/generatekey/',
       success: function(res) {
         console.log(res);
+        $(".api-key-text").html(res.API_KEY);
+        $("#api-key").val(res.API_KEY);
+        token = res.API_KEY;
         // token = res.API_KEY;
       },
       error: function(err) {
@@ -18,7 +28,8 @@ $(document).ready(function() {
   });
 
   $("#delete-image").on('click', function(e) {
-    let fileToDelete = 'img.png';
+    let fileToDelete = $('#delete-img-name').val();
+
     $.ajax({
       method: 'delete',
       url: '/api/images/' + fileToDelete + '/?token=' + token,
@@ -49,14 +60,14 @@ $(document).ready(function() {
   });
 
   $("#get-single-image").on('click', function() {
-    let fileToDelete = 'img.png';
+    let fileToFind = $('#single-img-name').val();
     $.ajax({
-      url: '/api/images/' + fileToDelete + '/?token=' + token,
+      url: '/api/images/' + fileToFind + '/?token=' + token,
       method: 'get',
       success: function(res) {
         console.log(res);
-        $("#images").html('');
-        $('#images').append('<img class="img" src=' + res.imgSrc + '/>');
+        $("#single-image").html('');
+        $('#single-image').append('<img class="img" src=' + res.imgSrc + '/>');
       },
       error: function(err) {
         console.log(err);

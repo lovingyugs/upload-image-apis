@@ -4,7 +4,7 @@
   "description": "Well, this are the REST API's for uploading images.",
   "main": "server.js",
   "scripts": {
-    "start": "node server"
+    "start": "node ./bin/www"
   },
   "author": "Yugal Jain",
   "license": "ISC",

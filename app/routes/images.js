@@ -44,6 +44,13 @@ function getAllImages(req, res, next) {
   const dir = `./uploads/${req.user.user_id}`;
   let dataToSend = [];
   fs.readdir(dir, (err, files) => {
+    if (err) {
+      res.status(200).json({
+        message: 'Error in getting Images. Either there is no Image for this key.',
+        errorDetails: err
+      });
+      return;
+    }
     for (let i = 0; i < files.length; i++) {
       let data = {
         imageDefaultName: `${files[i]}`,
@@ -58,7 +65,7 @@ function getAllImages(req, res, next) {
 
 function getSingleImage(req, res, next) {
   const dir = `./uploads/${req.user.user_id}/${req.params.id}`;
-//  var form = new formidable.IncomingForm(dir);
+  //  var form = new formidable.IncomingForm(dir);
   // form.on('fileBegin', function(name, value) {
   //   console.log(name);
   // });
@@ -101,7 +108,8 @@ function authenticator(req, res, next) {
   if (token) {
     jwt.verify(token, superSecret, function(err, decoded) {
       if (err) {
-        return res.status(200).json({ success: false, message: 'Failed to authenticate token.', errorDetails: err });
+        res.status(200).json({ success: false, message: 'Failed to authenticate token.', errorDetails: err });
+        return;
       } else {
         console.log('Correct Key');
         //console.log(decoded);
