@@ -13,6 +13,8 @@ cd upload-image-apis
 npm install
 npm start (to run)
 ```
+### API test in browser:
+Test the working of the app on http://localhost:3000
 
 ### API Details:
 Look at this link to know about API specs and how to use it. https://github.com/lovingyugs/upload-image-apis/wiki/Home/
