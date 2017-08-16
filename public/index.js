@@ -19,6 +19,7 @@ $(document).ready(function() {
       },
       error: function(err) {
         console.log(err.responseJSON);
+        alert(err.responseJSON.message);
       }
     });
   });
@@ -30,10 +31,11 @@ $(document).ready(function() {
       method: 'delete',
       url: '/api/images/' + fileToDelete + '/?token=' + token,
       success: function(res) {
-        console.log(res);
+        console.log(res.message);
       },
       error: function(err) {
         console.log(err.responseJSON);
+        alert(err.responseJSON.message);
       }
     });
   });
@@ -51,6 +53,7 @@ $(document).ready(function() {
       },
       error: function(err) {
         console.log(err.responseJSON);
+        alert(err.responseJSON.message);
       }
     });
   });
@@ -67,6 +70,7 @@ $(document).ready(function() {
       },
       error: function(err) {
         console.log(err.responseJSON);
+        alert(err.responseJSON.message);
       }
     });
   });
@@ -87,6 +91,7 @@ $(document).ready(function() {
       success: showResponse, // post-submit callback
       error: function(err) {
         console.log(err.responseJSON);
+        alert(err.responseJSON.message);
       }
     });
 
@@ -97,4 +102,5 @@ $(document).ready(function() {
 
 function showResponse(res) {
   console.log(res);
+  alert('File uploaded successfully.');
 }
