@@ -14,6 +14,20 @@ const config = require('../../config');
 const superSecret = config.superSecret;
 
 /**
+ * Function to check whether the object is empty or not.
+ * @param  {Onject}  obj [the req obj to check]
+ * @return {Boolean}     [false if object is not empty else true]
+ */
+function isEmptyObject(obj) {
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * uploadImage is used to post a image in file-system uploads folder.
  * @param  {Object}   req  [request parameters]
  * @param  {Object}   res  [response to send]
@@ -25,18 +39,8 @@ function uploadImage(req, res, next) {
   const user_id = req.user.user_id;
 
   //check for incoming formdata.
-  console.log('ok');
   let form = new formidable.IncomingForm();
-  // console.log(form);
-  
-  // // If no file is passed in the form we return.
-  if (form.openedFiles.length <= 0) {
-    res.status(400).json({
-      message: 'No File Found to upload.',
-    });
-    return;
-  }
-
+ 
   //Pass the form and look for files.
   form.parse(req, function(err, fields, files) {
     if (err) {
@@ -47,30 +51,43 @@ function uploadImage(req, res, next) {
       });
       return;
     }
-    res.status(200).json({
-      message: 'File uploaded successfully.',
-      fields: fields,
-      files: files
-    });
+    // If no file is passed in the form we return.
+    if (isEmptyObject(files)) {
+      res.status(400).json({
+        message: 'No File to upload was found.',
+        fields: fields,
+        files: files
+      });
+      return;
+    } else {
+      res.status(200).json({
+        message: 'File uploaded successfully.',
+        fields: fields,
+        files: files
+      });
+    }
   });
 
   //Files are uploaded to the respective user folder.
   form.on('end', function(fields, files) {
-    /* Temporary location of our uploaded file */
-    let temp_path = this.openedFiles[0].path;
-    /* The file name of the uploaded file */
-    let file_name = this.openedFiles[0].name;
-    /* Location where we want to copy the uploaded file */
-    let new_location = `uploads/${user_id}/`;
+    if (this.openedFiles.length >0) {
 
-    fs.copy(temp_path, new_location + file_name, function(err) {
-      if (err) {
-        console.error(err);
-        return;
-      } else {
-        console.log("success!")
-      }
-    });
+      /* Temporary location of our uploaded file */
+      let temp_path = this.openedFiles[0].path;
+      /* The file name of the uploaded file */
+      let file_name = this.openedFiles[0].name;
+      /* Location where we want to copy the uploaded file */
+      let new_location = `uploads/${user_id}/`;
+
+      fs.copy(temp_path, new_location + file_name, function(err) {
+        if (err) {
+          console.error(err);
+          return;
+        } else {
+          console.log("success!")
+        }
+      });
+    }
   });
 }
 
