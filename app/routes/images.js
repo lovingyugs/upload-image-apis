@@ -1,33 +1,67 @@
+/**
+ * This file contains all routes operations related to Images.
+ * Storing images in the file-system and performing CRUD on them.
+ * 
+ */
+
 const express = require('express');
 const router = express.Router();
 const formidable = require('formidable');
 const util = require('util');
 const fs = require('fs-extra');
 const jwt = require('jsonwebtoken');
-let config = require('../../config');
+const config = require('../../config');
 const superSecret = config.superSecret;
 
+/**
+ * uploadImage is used to post a image in file-system uploads folder.
+ * @param  {Object}   req  [request parameters]
+ * @param  {Object}   res  [response to send]
+ * @param  {Function} next [nextclick function]
+ */
 function uploadImage(req, res, next) {
+
+  //get user_id from request object.
   const user_id = req.user.user_id;
-  var form = new formidable.IncomingForm();
+
+  //check for incoming formdata.
+  console.log('ok');
+  let form = new formidable.IncomingForm();
+  // console.log(form);
+  
+  // // If no file is passed in the form we return.
+  if (form.openedFiles.length <= 0) {
+    res.status(400).json({
+      message: 'No File Found to upload.',
+    });
+    return;
+  }
+
+  //Pass the form and look for files.
   form.parse(req, function(err, fields, files) {
-    // res.writeHead(200, { 'content-type': 'text/plain' });
-    // res.write('received upload:\n\n');
-    // res.end(util.inspect({ fields: fields, files: files }));
+    if (err) {
+      console.log(err);
+      res.status(400).json({
+        message: 'Some error occured while parsing file.',
+        errorDetails: err
+      });
+      return;
+    }
     res.status(200).json({
       message: 'File uploaded successfully.',
       fields: fields,
       files: files
-    })
+    });
   });
 
+  //Files are uploaded to the respective user folder.
   form.on('end', function(fields, files) {
     /* Temporary location of our uploaded file */
-    var temp_path = this.openedFiles[0].path;
+    let temp_path = this.openedFiles[0].path;
     /* The file name of the uploaded file */
-    var file_name = this.openedFiles[0].name;
+    let file_name = this.openedFiles[0].name;
     /* Location where we want to copy the uploaded file */
-    var new_location = `uploads/${user_id}/`;
+    let new_location = `uploads/${user_id}/`;
 
     fs.copy(temp_path, new_location + file_name, function(err) {
       if (err) {
@@ -40,39 +74,60 @@ function uploadImage(req, res, next) {
   });
 }
 
+/**
+ * getAllImages will send the image details for the respective api_key user.
+ * @param  {Object}   req  [request parameters]
+ * @param  {Object}   res  [response to send]
+ * @param  {Function} next [nextclick function]
+ */
 function getAllImages(req, res, next) {
+
+  //getting user_id from req object and setting the user dir path where images are stored.
   const dir = `./uploads/${req.user.user_id}`;
   let dataToSend = [];
+
+  /*
+    Reading for all the files in the particular dir.
+   */
   fs.readdir(dir, (err, files) => {
     if (err) {
-      res.status(200).json({
+      res.status(400).json({
         message: 'Error in getting Images. Either there is no Image for this key.',
         errorDetails: err
       });
       return;
     }
     for (let i = 0; i < files.length; i++) {
+
+      // Each file object.
       let data = {
         imageDefaultName: `${files[i]}`,
         imgSrc: `${config.hostname}/uploads/${req.user.user_id}/${files[i]}`,
         message: 'Above is the url to access your image.'
       }
+
+      //Pushing it to the array.
       dataToSend.push(data);
     }
+
+    //sending the array of images to the respective api_user.
     res.status(200).json(dataToSend);
   });
 }
 
+/**
+ * getSingleImage, sends single image details with the given name if exists. 
+ * @param  {Object}   req  [request parameters]
+ * @param  {Object}   res  [response to send]
+ * @param  {Function} next [nextclick function]
+ */
 function getSingleImage(req, res, next) {
-  const dir = `./uploads/${req.user.user_id}/${req.params.id}`;
-  //  var form = new formidable.IncomingForm(dir);
-  // form.on('fileBegin', function(name, value) {
-  //   console.log(name);
-  // });
 
+  //getting user_id from req object and setting the user dir path where image is stored.
+  const dir = `./uploads/${req.user.user_id}/${req.params.id}`;
   fs.readFile(dir, (err, file) => {
     if (err) {
-      res.status(200).json({
+      res.status(400).json({
         'message': 'error while getting image.',
         'errorDetails': err
       });
@@ -87,11 +142,17 @@ function getSingleImage(req, res, next) {
   });
 }
 
+/**
+ * deleteImage, deletes the particular image with the given name. 
+ * @param  {Object}   req  [request parameters]
+ * @param  {Object}   res  [response to send]
+ * @param  {Function} next [nextclick function]
+ */
 function deleteImage(req, res, next) {
   const dir = `./uploads/${req.user.user_id}/${req.params.id}`;
   fs.unlink(dir, function(err, text) {
     if (err) {
-      res.json({
+      res.status(400).json({
         message: 'Some error occured while deleting the Image.',
         errorDetails: err
       });
@@ -102,17 +163,31 @@ function deleteImage(req, res, next) {
   })
 }
 
+/**
+ * authenticator, authenticates all the routes and check whether the valid token/api_key is passed with the request or not. 
+ * @param  {Object}   req  [request parameters]
+ * @param  {Object}   res  [response to send]
+ * @param  {Function} next [nextclick function]
+ */
 function authenticator(req, res, next) {
+
+  /*
+    Getting token value from either body/ from url params/ from headers.
+   */
   let token;
   token = req.body.token || req.query.token || req.headers['x-access-token'];
   if (token) {
+
+    //If token exists we decode it with our secret key.
     jwt.verify(token, superSecret, function(err, decoded) {
       if (err) {
-        res.status(200).json({ success: false, message: 'Failed to authenticate token.', errorDetails: err });
+        //If token is invalid.
+        res.status(400).json({ success: false, message: 'Failed to authenticate token. Invalid Token', errorDetails: err });
         return;
       } else {
         console.log('Correct Key');
-        //console.log(decoded);
+
+        //If token is valid we set the decoded details in the req object.
         req.user = {};
         req.user.user_id = decoded.user_id;
         req.user.status = true;
@@ -120,11 +195,15 @@ function authenticator(req, res, next) {
       }
     })
   } else {
+    //If no token is passed we send this response.
     console.log('No Token');
-    res.status(200).json({ success: false, message: 'No Token Provided' });
+    res.status(400).json({ success: false, message: 'No Token Provided' });
   }
 }
 
+/**
+ * Relate routes and functions here. Functions are like callback functions and should be defined above.
+ */
 router.use(authenticator);
 router.get('/', getAllImages);
 router.get('/:id', getSingleImage);

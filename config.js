@@ -1,3 +1,7 @@
+/**
+ * This File will export the required config details acc. to the process Environment.
+ */
+
 let config = {};
 
 if (process.env.NODE_ENV === 'development') {

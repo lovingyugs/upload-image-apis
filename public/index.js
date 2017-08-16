@@ -1,10 +1,9 @@
-let token = ''; 
-// 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE1MDI4MDQzMjAsImV4cCI6MTUwMjg5MDcyMH0.VAaDepNHi6FnIayLp1HwzGLi7roYEyXNmVTbTb5HqQw';
+let token = '';
 
 $(document).ready(function() {
   console.log('runs');
 
-  $("#api-key").on('change',function(e){
+  $("#api-key").on('change', function(e) {
     console.log($('#api-key').val());
     token = $('#api-key').val();
     $(".api-key-text").html(token);
@@ -19,7 +18,6 @@ $(document).ready(function() {
         $(".api-key-text").html(res.API_KEY);
         $("#api-key").val(res.API_KEY);
         token = res.API_KEY;
-        // token = res.API_KEY;
       },
       error: function(err) {
         console.log(err);
