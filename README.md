@@ -15,7 +15,7 @@ npm start (to run)
 ```
 
 ### API Details:
-Look at this link to know API specs. https://github.com/lovingyugs/upload-image-apis/wiki/Home/
+Look at this link to know about API specs and how to use it. https://github.com/lovingyugs/upload-image-apis/wiki/Home/
 
 ### Postman Embedded Link:
-Make API calls direct using POSTMAN. Go for embedded postman link. See this- https://github.com/lovingyugs/upload-image-apis/wiki/postman
+Make API calls using POSTMAN. Go for the embedded postman link. See this- https://github.com/lovingyugs/upload-image-apis/wiki/postman
