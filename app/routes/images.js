@@ -1,7 +1,7 @@
 /**
  * This file contains all routes operations related to Images.
  * Storing images in the file-system and performing CRUD on them.
- * 
+ * Look at the end of file to know more.
  */
 
 const express = require('express');
@@ -10,6 +10,7 @@ const formidable = require('formidable');
 const util = require('util');
 const fs = require('fs-extra');
 const jwt = require('jsonwebtoken');
+const async = require('async');
 const config = require('../../config');
 const superSecret = config.superSecret;
 
@@ -40,8 +41,8 @@ function uploadImage(req, res, next) {
 
   //check for incoming formdata.
   let form = new formidable.IncomingForm();
- 
-  //Pass the form and look for files.
+
+  //Parse the form and look for files.
   form.parse(req, function(err, fields, files) {
     if (err) {
       console.log(err);
@@ -51,6 +52,7 @@ function uploadImage(req, res, next) {
       });
       return;
     }
+
     // If no file is passed in the form we return.
     if (isEmptyObject(files)) {
       res.status(400).json({
@@ -59,18 +61,27 @@ function uploadImage(req, res, next) {
         files: files
       });
       return;
-    } else {
-      res.status(200).json({
-        message: 'File uploaded successfully.',
-        fields: fields,
-        files: files
-      });
     }
   });
 
-  //Files are uploaded to the respective user folder.
+  // On file parse end.
   form.on('end', function(fields, files) {
-    if (this.openedFiles.length >0) {
+
+    if (this.openedFiles.length > 0) {
+      //Check whether file of particular types(jpg|jpeg|png|gif) exits or not.
+      if (this.openedFiles[0].name && this.openedFiles[0].type && (this.openedFiles[0].type).toLowerCase().match(/\/(jpg|jpeg|png|gif)$/)) {
+        // Files is of required type.
+        console.log('File type allowed');
+      } else {
+        // Files is not of required type. We return the error.
+        console.log('File Type Not Allowed.');
+        res.status(400).json({
+          message: 'File Type Not Allowed.',
+          files: files,
+          fields: fields
+        });
+        return;
+      }
 
       /* Temporary location of our uploaded file */
       let temp_path = this.openedFiles[0].path;
@@ -79,12 +90,27 @@ function uploadImage(req, res, next) {
       /* Location where we want to copy the uploaded file */
       let new_location = `uploads/${user_id}/`;
 
+      //Send Success of uploading the Image with Image details.
+      res.status(200).json({
+        message: 'File uploaded successfully.',
+        details: {
+          name: this.openedFiles[0].name,
+          lastModifiedDate: this.openedFiles[0].lastModifiedDate,
+          type: this.openedFiles[0].type,
+          size: this.openedFiles[0].size,
+          uploaded_from: this.openedFiles[0].path,
+          uploaded_to: `/uploads/${req.user.user_id}/${this.openedFiles[0].name}`
+        }
+      });
+
+      // Copy files to new directory.
       fs.copy(temp_path, new_location + file_name, function(err) {
         if (err) {
           console.error(err);
           return;
         } else {
-          console.log("success!")
+          console.log("success!");
+
         }
       });
     }

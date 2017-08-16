@@ -1,10 +1,8 @@
 let token = '';
 
 $(document).ready(function() {
-  console.log('runs');
-
+ 
   $("#api-key").on('change', function(e) {
-    console.log($('#api-key').val());
     token = $('#api-key').val();
     $(".api-key-text").html(token);
   });
@@ -20,7 +18,7 @@ $(document).ready(function() {
         token = res.API_KEY;
       },
       error: function(err) {
-        console.log(err);
+        console.log(err.responseJSON);
       }
     });
   });
@@ -35,7 +33,7 @@ $(document).ready(function() {
         console.log(res);
       },
       error: function(err) {
-        console.log(err);
+        console.log(err.responseJSON);
       }
     });
   });
@@ -52,7 +50,7 @@ $(document).ready(function() {
         }
       },
       error: function(err) {
-        console.log(err);
+        console.log(err.responseJSON);
       }
     });
   });
@@ -68,7 +66,7 @@ $(document).ready(function() {
         $('#single-image').append('<img class="img" src=' + res.imgSrc + '/>');
       },
       error: function(err) {
-        console.log(err);
+        console.log(err.responseJSON);
       }
     });
   });
@@ -88,7 +86,7 @@ $(document).ready(function() {
       data: fd,
       success: showResponse, // post-submit callback
       error: function(err) {
-        console.log(err);
+        console.log(err.responseJSON);
       }
     });
 
