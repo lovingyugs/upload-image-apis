@@ -10,7 +10,6 @@ const formidable = require('formidable');
 const util = require('util');
 const fs = require('fs-extra');
 const jwt = require('jsonwebtoken');
-const async = require('async');
 const config = require('../../config');
 const superSecret = config.superSecret;
 
