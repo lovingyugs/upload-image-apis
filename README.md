@@ -14,7 +14,7 @@ npm install
 npm start (to run)
 ```
 ### API test in browser:
-Start the server. (**Once you start the server do not shut it down.**).
+Start the server.
 
 Test the working of the app on http://localhost:3000
 
