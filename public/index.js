@@ -54,6 +54,7 @@ $(document).ready(function() {
       url: '/api/images/' + fileToDelete + '/?token=' + token,
       success: function(res) {
         console.log(res.message);
+        alert(res.message);
       },
       error: function(err) {
         console.log(err.responseJSON);
