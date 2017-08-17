@@ -1,27 +1,49 @@
 let token = '';
 
+function valid(numberToValidate) {
+  numberToValidate = numberToValidate.toString();
+  console.log(numberToValidate.match(/\^[789]\d{9}$/));
+  if (numberToValidate.match(/^[789]\d{9}$/))
+    return true;
+  else
+    return false;
+};
+
 $(document).ready(function() {
- 
+
   $("#api-key").on('change', function(e) {
     token = $('#api-key').val();
     $(".api-key-text").html(token);
   });
 
+
   $("#gen-btn").on('click', function(e) {
-    $.ajax({
-      method: 'get',
-      url: '/api/generatekey/',
-      success: function(res) {
-        console.log(res);
-        $(".api-key-text").html(res.API_KEY);
-        $("#api-key").val(res.API_KEY);
-        token = res.API_KEY;
-      },
-      error: function(err) {
-        console.log(err.responseJSON);
-        alert(err.responseJSON.message);
-      }
-    });
+    let uniqueNumber = $("#unique-number").val();
+    console.log(uniqueNumber);
+    if (valid(uniqueNumber)) {
+      console.log('valid number');
+      $.ajax({
+        method: 'get',
+        url: '/api/generatekey/',
+        data: {
+          unique_number: uniqueNumber
+        },
+        success: function(res) {
+          console.log(res);
+          $(".api-key-text").html(res.API_KEY);
+          $("#api-key").val(res.API_KEY);
+          token = res.API_KEY;
+        },
+        error: function(err) {
+          console.log(err.responseJSON);
+          alert(err.responseJSON.message);
+        }
+      });
+    } else {
+      let msg = 'Enter a valid 10 digit number starting with 7/8/9';
+      console.log(msg);
+      alert(msg);
+    }
   });
 
   $("#delete-image").on('click', function(e) {

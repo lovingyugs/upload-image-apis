@@ -4,99 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <title>Upload images to server using Node JS</title>
+  <link rel="stylesheet" type="text/css" href="./styles.css">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
   <script type="text/javascript" src="index.js"></script>
   <style type="text/css">
-  html,
-  body {
-    font-family: sans-serif;
-  }
 
-  button {
-    font-family: sans-serif;
-  }
-
-  .btn {
-
-    font-family: sans-serif;
-    text-align: center;
-    background: #6a6ace;
-    color: white;
-    padding: 10px;
-    border: 1px;
-    cursor: pointer;
-    border-radius: 2px;
-    margin: 20px;
-    margin-left: 0;
-  }
-
-  .images {
-    padding: 5px;
-  }
-
-  .img {
-    width: 100px;
-    margin: 10px;
-    box-shadow: 2px -2px 20px 0px;
-  }
-
-  .top {
-    margin: 50px;
-    margin-bottom: 5px;
-    font-size: 1.2em;
-    color: orange;
-  }
-
-  #api-key {
-    width: 90%;
-    margin: 50px;
-    margin-top: 0;
-    padding: 10px;
-    font-size: 0.9em;
-    border: 2px solid blue;
-    box-shadow: 1px;
-    border-radius: 3px;
-    margin-bottom: 10px;
-  }
-
-  #main {
-    margin: 50px;
-    margin-top: 0;
-    width: 90%;
-  }
-
-  .api-key-text {
-    color: orange;
-    font-size: smaller;
-    word-break: break-all;
-    margin: 1px;
-
-    display: inline-block;
-  }
-
-  #frmUploader {
-    border: 2px solid blue;
-    padding: 5px;
-  }
-
-  #frmUploader .btn {
-    display: inline-block;
-  }
-
-  .file-style {
-    cursor: arrow;
-  }
-
-  .input-name {
-    width: auto;
-    padding: 5px 3px;
-    font-size: 0.8em;
-    border: 2px solid blue;
-    box-shadow: 1px;
-    border-radius: 2px;
-    margin-right: 7px;
-  }
   </style>
 </head>
 
@@ -104,6 +17,7 @@
   <p class="top">You are using following API_KEY:</p>
   <input type="text" class="" id="api-key" placeholder="Enter Your Secret API_KEY here." value="" />
   <div id="main">
+    <input type="text" class="input-name big-input" id="unique-number" placeholder="Enter your Mobile Number" />
     <button class="btn" value="" id="gen-btn">Get API KEY</button>
     <p class="api-key-text"></p>
     <br>
